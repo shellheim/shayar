@@ -21,7 +21,7 @@ const getRandomCouplet = async (data) => {
 
 const fetchDataAndGetRandomCouplet = async () => {
   try {
-    const response = await fetch("./sherCollection.json");
+    const response = await fetch("/static/sherCollection.json");
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
