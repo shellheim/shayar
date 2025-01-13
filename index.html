@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shayar</title>
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="./static/favicon.png"
+    />
+    <link href="./static/style.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+    <script type="module" defer src="./static/index.js"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="display">
+        <h1>शायर</h1>
+        <div class="container">
+          <div class="sher"></div>
+          <p class="shayar"></p>
+        </div>
+        <button class="btn-blue" id="print">Print</button>
+        <button class="btn-red" id="download">Download</button>
+      </div>
+      <div class="text">
+        <textarea name="sher-box" id="sher-box" placeholder="शेर">
+मोहब्बत में नहीं है फ़र्क़ जीने और मरने का 
+उसी को देख कर जीते हैं जिस काफ़िर पे दम निकले</textarea
+        >
+        <textarea name="shayar-box" id="shayar-box" placeholder="शायर">
+ग़ालिब</textarea
+        >
+      </div>
+    </div>
+    <footer>
+      <span
+        >Don't like this one? Do a
+        <a onclick="window.location.reload()" href="javascript:void(0);"
+          >refresh!</a
+        ></span
+      >
+      <p class="copyright">
+        &copy 2025.
+        <a target="_blank" href="https://github.com/shellheim/shayar">Source</a>
+      </p>
+    </footer>
+  </body>
+</html>
