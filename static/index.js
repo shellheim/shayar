@@ -1,13 +1,28 @@
+// Contains the whole couplet
+const container = document.getElementsByClassName("container")[0];
 // line container
 const couplet = document.getElementsByClassName("sher")[0];
-
 const byline = document.getElementsByClassName("shayar")[0];
 
 const coupletBox = document.getElementById("sher-box");
 const writerBox = document.getElementById("shayar-box");
 
+// controls
+
 const printButton = document.getElementById("print");
 const downloadButton = document.getElementById("download");
+
+const fontSizeRange = document.getElementById("font-size-range");
+const fontSizeValue = document.getElementById("font-size-value");
+
+let fontSize = Number.parseInt(window.getComputedStyle(container).fontSize);
+fontSizeRange.value = fontSize;
+fontSizeValue.textContent = `${fontSize}px`;
+
+// Add custom padding for range on chromium
+if (navigator.userAgent.indexOf("Chrome") !== -1) {
+  fontSizeRange.classList.add("chromium-range-padding");
+}
 
 const getRandomCouplet = async (data) => {
   const authors = Object.keys(data);
@@ -21,7 +36,7 @@ const getRandomCouplet = async (data) => {
 
 const fetchDataAndGetRandomCouplet = async () => {
   try {
-    const response = await fetch("/shayar/static/sherCollection.json");
+    const response = await fetch("/static/sherCollection.json");
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -96,28 +111,41 @@ const makeLineChain = (lines) => {
 };
 
 printButton.addEventListener("click", () => {
-  if (coupletBox !== "") {
+  // Don't print an empty box
+  if (coupletBox.value.trim() !== "") {
     const lines = coupletBox.value.split("\n").filter((n) => n !== "");
     makeLineChain(lines);
-  }
 
-  byline.innerText = `${
-    writerBox.value.trim() ? "—" : ""
-  } ${writerBox.value.trim()}`;
+    byline.innerText = `${
+      writerBox.value.trim() ? "—" : ""
+    } ${writerBox.value.trim()}`;
+  }
+});
+
+// tweak font-size on range input
+fontSizeRange.addEventListener("input", () => {
+  fontSize = fontSizeRange.value;
+  container.style.fontSize = `${fontSize}px`;
+  fontSizeValue.textContent = `${fontSize}px`;
+  console.log("fontSize: ", fontSize);
+  console.log("fontSizeRange: ", fontSizeRange.value);
 });
 
 downloadButton.addEventListener("click", () => {
-  const node = document.getElementsByClassName("container")[0];
+  // don't download empty boxes
+  if (container.innerText.trim() !== "") {
+    const node = document.getElementsByClassName("container")[0];
 
-  htmlToImage
-    .toPng(node)
-    .then((dataUrl) => {
-      const link = document.createElement("a");
-      link.download = `sher-${Math.floor(Math.random() * 100)}.png`;
-      link.href = dataUrl;
-      link.click();
-    })
-    .catch((error) => {
-      console.error("Error converting HTML to image", error);
-    });
+    htmlToImage
+      .toPng(node)
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = `sher-${Math.floor(Math.random() * 100)}.png`;
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((error) => {
+        console.error("Error converting HTML to image", error);
+      });
+  }
 });

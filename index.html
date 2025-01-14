@@ -22,8 +22,14 @@
           <div class="sher"></div>
           <p class="shayar"></p>
         </div>
-        <button class="btn-blue" id="print">Print</button>
-        <button class="btn-red" id="download">Download</button>
+        <div class="controls">
+          <label for="font-size-range"
+            >Adjust Font Size: <span id="font-size-value"></span
+          ></label>
+          <input type="range" id="font-size-range" min="8" max="72" value="" />
+          <button class="btn-blue" id="print">Print</button>
+          <button class="btn-red" id="download">Download</button>
+        </div>
       </div>
       <div class="text">
         <textarea name="sher-box" id="sher-box" placeholder="शेर">

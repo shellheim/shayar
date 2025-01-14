@@ -34,6 +34,7 @@ footer {
   max-width: 875px;
   margin: auto;
 }
+.controls,
 .wrapper,
 .display,
 .text {
@@ -56,9 +57,12 @@ textarea {
   text-align: center;
 }
 button,
-textarea {
+textarea,
+input {
   font-size: inherit;
+  margin-block-end: 1.25rem;
 }
+input,
 textarea {
   background: linear-gradient(#d6b9a8, #e6d2b9, #e6d2b9, #e6d2b9);
   border: none;
@@ -70,7 +74,6 @@ button {
   border: none;
   font-family: "Segoe UI", "Roboto", "Inter", sans-serif;
   border-radius: 6px;
-  margin-block-end: 1.25rem;
   padding-block: 1.25rem;
   transition: 50ms;
 }
@@ -82,6 +85,50 @@ button:active {
 }
 .btn-red {
   background-color: rgb(239, 61, 91);
+}
+
+/* Custom range input style */
+
+#font-size-range {
+  -webkit-appearance: none;
+  /* padding: 12px; */
+}
+
+/* Firefox */
+#font-size-range::-moz-range-progress {
+  overflow: hidden;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #9a905d;
+}
+#font-size-range::-moz-range-track {
+  background-color: #b6a9a2;
+}
+
+/* Chromium */
+
+/* Custom padding for Chromium */
+.chromium-range-padding {
+  padding: 18px;
+}
+
+#font-size-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: 2px solid #b6a9a2;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -8px;
+}
+
+#font-size-range::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  background: #9a905d;
+  border-radius: 1.3px;
 }
 
 .container {
