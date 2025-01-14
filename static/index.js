@@ -28,8 +28,8 @@ const fetchDataAndGetRandomCouplet = async () => {
 
     const jsonData = await response.json();
     const randomCouplet = await getRandomCouplet(jsonData);
-    coupletBox.innerText = randomCouplet.couplet;
-    writerBox.innerHTML = randomCouplet.author;
+    coupletBox.value = randomCouplet.couplet;
+    writerBox.value = randomCouplet.author;
     printButton.click();
   } catch (error) {
     console.error(

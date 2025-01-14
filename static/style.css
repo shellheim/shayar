@@ -116,11 +116,17 @@ textarea {
   min-height: 8rem;
 }
 
-@media (600px <= width) {
+@media (770px <= width) {
   .wrapper {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+  }
+}
+@media (360px >= width) {
+  .container {
+    font-size: 1.65rem;
+    min-height: 20rem;
   }
 }
 @media (340px >= width) {
