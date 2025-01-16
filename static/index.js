@@ -1,45 +1,42 @@
-// Contains the whole couplet
-const container = document.getElementsByClassName("container")[0];
-// line container
-const couplet = document.getElementsByClassName("sher")[0];
-const byline = document.getElementsByClassName("shayar")[0];
-
+// DOM Elements
+const container = document.querySelector(".container");
+const couplet = document.querySelector(".sher");
+const byline = document.querySelector(".shayar");
 const coupletBox = document.getElementById("sher-box");
 const writerBox = document.getElementById("shayar-box");
 
-// controls
-
 const printButton = document.getElementById("print");
 const downloadButton = document.getElementById("download");
-
 const fontSizeRange = document.getElementById("font-size-range");
 const fontSizeValue = document.getElementById("font-size-value");
 
+// Initialize font size on the range input
 let fontSize = Number.parseInt(window.getComputedStyle(container).fontSize);
 fontSizeRange.value = fontSize;
 fontSizeValue.textContent = `${fontSize}px`;
 
-// Add custom padding for range on chromium
-if (navigator.userAgent.indexOf("Chrome") !== -1) {
+// Add custom padding on range input for Chromium browsers
+if (navigator.userAgent.includes("Chrome")) {
   fontSizeRange.classList.add("chromium-range-padding");
 }
 
+// Return a random couplet
 const getRandomCouplet = async (data) => {
   const authors = Object.keys(data);
   const randomAuthor = authors[Math.floor(Math.random() * authors.length)];
-
   const couplets = data[randomAuthor];
   const randomCouplet = couplets[Math.floor(Math.random() * couplets.length)];
-
   return { author: randomAuthor, couplet: randomCouplet };
 };
 
-const fetchDataAndGetRandomCouplet = async () => {
+// Fetch data and set random couplet
+const fetchDataAndSetCouplet = async () => {
   try {
     const response = await fetch("/shayar/static/sherCollection.json");
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
+    if (!response.ok)
+      throw new Error(
+        `Failed to fetch couplets, got error: ${response.status}`,
+      );
 
     const jsonData = await response.json();
     const randomCouplet = await getRandomCouplet(jsonData);
@@ -47,105 +44,99 @@ const fetchDataAndGetRandomCouplet = async () => {
     writerBox.value = randomCouplet.author;
     printButton.click();
   } catch (error) {
-    console.error(
-      "Couldn't load collection, falling back to static couplet",
-      error,
-    );
+    console.error(`Error in loading couplet collection: ${error}`);
   }
 };
 
-fetchDataAndGetRandomCouplet();
-
-const createLine = (content, index, container) => {
+// Generate single line elements for couplets
+// the createLinePair() function calls this function to create a sort of container
+// for two lines, or for one line each in case there are only two lines in total
+const createLine = (content, index, container, putNewLine) => {
   const newLine = document.createElement("span");
-  newLine.innerText = `\n${content}`;
+  newLine.innerText = `${putNewLine ? "\n" : ""}${content}`; // put '\n' on multi-line couplets
   newLine.className = `line-${index}`;
   container.appendChild(newLine);
 };
 
+// Helper to create a pair of lines for two line couplets
+const createLinePair = (lineContent, index) => {
+  const linePair = document.createElement("div");
+  linePair.className = "line";
+  createLine(lineContent, index, linePair);
+  return linePair;
+};
+
 const makeLineChain = (lines) => {
-  // clear previous print
+  // Clear previous content
   couplet.innerHTML = "";
 
-  // if it's a standard sher with only 2 lines
+  // For a standard couplet with two lines
+  // Calling the createLinePair() function two times to make a line container for each line, this
+  // because we want them to be separated more through css
   if (lines.length === 2) {
-    const linePairOne = document.createElement("div");
-    const linePairTwo = document.createElement("div");
-
-    linePairOne.className = "line";
-    linePairTwo.className = "line";
-
-    const firstLine = document.createElement("span");
-    const secondLine = document.createElement("span");
-
-    firstLine.className = "line-1";
-    secondLine.className = "line-2";
-
-    firstLine.innerText = lines[0];
-    secondLine.innerText = lines[1];
-
-    couplet.appendChild(linePairOne);
-    couplet.appendChild(linePairTwo);
-
-    linePairOne.appendChild(firstLine);
-    linePairTwo.appendChild(secondLine);
-
+    const lineOne = createLinePair(lines[0], 1);
+    const lineTwo = createLinePair(lines[1], 2);
+    couplet.append(lineOne, lineTwo);
     return;
   }
-
-  // make as many lines as necessary
+  // For more than two lines
   for (let i = 1; i <= lines.length; i++) {
     let linePair;
-
     if (i % 2 === 0) {
+      // if you are an even line, you are the last line of a pairr. So, find the last pair
+      // and attach yourself as the last line.
       const linePairArray = document.getElementsByClassName("line");
       linePair = linePairArray[linePairArray.length - 1];
-      couplet.appendChild(linePair);
     } else {
+      // if you are an odd line, you are the start of a pair. So, create a conatainer
+      // and attach yourself as the first line
       linePair = document.createElement("div");
       linePair.className = "line";
-      couplet.appendChild(linePair);
     }
-    createLine(lines[i - 1], i, linePair);
+    createLine(lines[i - 1], i, linePair, true);
+    couplet.appendChild(linePair);
   }
 };
 
+// Event listener for printing the couplet
 printButton.addEventListener("click", () => {
-  // Don't print an empty box
-  if (coupletBox.value.trim() !== "") {
-    const lines = coupletBox.value.split("\n").filter((n) => n !== "");
+  const lines = coupletBox.value.trim().split("\n").filter(Boolean);
+  if (lines.length > 0) {
     makeLineChain(lines);
-
-    byline.innerText = `${
-      writerBox.value.trim() ? "—" : ""
-    } ${writerBox.value.trim()}`;
+    byline.innerText = writerBox.value.trim()
+      ? `— ${writerBox.value.trim()}`
+      : "";
   }
 });
 
-// tweak font-size on range input
+// Event listener for changing font size
 fontSizeRange.addEventListener("input", () => {
   fontSize = fontSizeRange.value;
   container.style.fontSize = `${fontSize}px`;
   fontSizeValue.textContent = `${fontSize}px`;
-  console.log("fontSize: ", fontSize);
-  console.log("fontSizeRange: ", fontSizeRange.value);
 });
 
+// Event listener for downloading the image of the couplet
 downloadButton.addEventListener("click", () => {
-  // don't download empty boxes
-  if (container.innerText.trim() !== "") {
-    const node = document.getElementsByClassName("container")[0];
-
+  if (container.innerText.trim()) {
     htmlToImage
-      .toPng(node)
+      .toPng(container)
       .then((dataUrl) => {
         const link = document.createElement("a");
-        link.download = `sher-${Math.floor(Math.random() * 100)}.png`;
+        // if writer name exists put that in the file name, along with first line of the couplet
+        link.download = `${
+          byline.innerText.replace("—", "").trim()
+            ? `${byline.innerText.replace("—", "").trim()} — `
+            : ""
+        }${document.querySelector(".line-1").innerText}.png`;
         link.href = dataUrl;
         link.click();
       })
       .catch((error) => {
-        console.error("Error converting HTML to image", error);
+        console.error("Error converting HTML to image:", error);
       });
   }
 });
+
+// Fetch random couplet when the page loads
+fetchDataAndSetCouplet();
