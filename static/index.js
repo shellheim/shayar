@@ -119,21 +119,24 @@ fontSizeRange.addEventListener("input", () => {
 // Event listener for downloading the image of the couplet
 downloadButton.addEventListener("click", () => {
   if (container.innerText.trim()) {
+    const link = document.createElement("a");
     htmlToImage
       .toPng(container)
       .then((dataUrl) => {
-        const link = document.createElement("a");
         // if writer name exists put that in the file name, along with first line of the couplet
         link.download = `${
           byline.innerText.replace("—", "").trim()
             ? `${byline.innerText.replace("—", "").trim()} — `
             : ""
-        }${document.querySelector(".line-1").innerText}.png`;
+        }${document.querySelector(".line-1").innerText.trim()}.png`;
         link.href = dataUrl;
         link.click();
       })
       .catch((error) => {
         console.error("Error converting HTML to image:", error);
+      })
+      .finally(() => {
+        link.remove();
       });
   }
 });
