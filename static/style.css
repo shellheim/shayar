@@ -89,9 +89,38 @@ button:active {
 
 /* Custom range input style */
 
-#font-size-range {
+#font-size-range,
+#toggle-border-radius {
+  appearance: none;
   -webkit-appearance: none;
-  /* padding: 12px; */
+}
+#font-size-range {
+  margin-block-start: 0.5rem;
+}
+#toggle-border-radius-label {
+  display: inherit;
+}
+#toggle-border-radius {
+  display: grid;
+  place-content: center;
+  translate: 0.5em 0.15em;
+  border: 2px solid #9a905d;
+  font: inherit;
+  width: 1.15em;
+  height: 1.15em;
+  margin: 0;
+}
+#toggle-border-radius::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  transform: scale(0);
+  transition: 50ms transform ease-out;
+  box-shadow: inset 1em 1em #9a905d;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+#toggle-border-radius:checked::before {
+  transform: scale(1);
 }
 
 /* Firefox */
@@ -140,6 +169,8 @@ button:active {
   font-size: 1.75rem;
   min-height: 18rem;
   background: linear-gradient(#d6b9a8, #e6d2b9, #e6d2b9, #e6d2b9);
+}
+.border-radius-6px {
   border-radius: 6px;
 }
 .sher {

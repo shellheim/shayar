@@ -7,8 +7,23 @@ const writerBox = document.getElementById("shayar-box");
 
 const printButton = document.getElementById("print");
 const downloadButton = document.getElementById("download");
+const borderRadiusToggle = document.getElementById("toggle-border-radius");
 const fontSizeRange = document.getElementById("font-size-range");
 const fontSizeValue = document.getElementById("font-size-value");
+
+// gotta do this through js cause just adding "checked" to a
+// custom checkbox doesn't work on firefox
+borderRadiusToggle.checked = true;
+
+borderRadiusToggle.addEventListener("change", () => {
+  if (borderRadiusToggle.checked) {
+    container.classList.add("border-radius-6px");
+    console.log("checked");
+  } else {
+    container.classList.remove("border-radius-6px");
+    console.log("un-checked");
+  }
+});
 
 // Initialize font size on the range input
 let fontSize = Number.parseInt(window.getComputedStyle(container).fontSize);
