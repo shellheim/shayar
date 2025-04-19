@@ -18,10 +18,8 @@ borderRadiusToggle.checked = true;
 borderRadiusToggle.addEventListener("change", () => {
   if (borderRadiusToggle.checked) {
     container.classList.add("border-radius-6px");
-    console.log("checked");
   } else {
     container.classList.remove("border-radius-6px");
-    console.log("un-checked");
   }
 });
 
